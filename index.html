@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#000000" />
+    <title>Just On Time</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main id="app">
+      <header class="topbar">
+        <span class="clock" id="clock">0:00</span>
+        <button class="icon-btn" id="pause-btn" aria-label="Pause"></button>
+      </header>
+
+      <section class="fighter enemy" id="enemy">
+        <div class="enemy-top">
+          <div class="sprite" id="enemy-sprite"></div>
+          <div class="enemy-info">
+            <div class="fighter-head">
+              <h2 id="enemy-name"></h2>
+              <span class="block-badge" id="enemy-block" hidden></span>
+            </div>
+            <div class="hp-bar">
+              <div class="hp-fill" id="enemy-hp-fill"></div>
+              <span class="hp-text" id="enemy-hp-text"></span>
+            </div>
+            <div class="statuses" id="enemy-statuses"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="force-zone" id="force-zone">
+        <div class="duel">
+          <div class="duel-side intent" id="intent">
+            <div class="duel-label">Enemy</div>
+            <div class="duel-main">
+              <span class="duel-icon" id="intent-icon"></span>
+              <span class="duel-value" id="intent-value"></span>
+            </div>
+            <div class="duel-label" id="intent-text"></div>
+            <div class="timer-bar"><div class="timer-fill" id="intent-timer"></div></div>
+            <div class="duel-sub" id="intent-countdown"></div>
+            <div class="duel-sub duel-outcome" id="intent-outcome"></div>
+            <div class="duel-sub" id="intent-next"></div>
+          </div>
+          <div class="duel-side guard" id="guard">
+            <div class="duel-label">You</div>
+            <div class="duel-main">
+              <span class="duel-icon" id="guard-icon"></span>
+              <span class="duel-value" id="guard-value"></span>
+            </div>
+            <div class="duel-label">Block</div>
+            <div class="timer-bar"><div class="timer-fill" id="guard-timer"></div></div>
+            <div class="duel-sub" id="guard-countdown"></div>
+          </div>
+        </div>
+        <span class="force-zone-text" id="force-zone-text"></span>
+      </div>
+
+      <section class="fighter player" id="player">
+        <div class="fighter-head">
+          <h2>You</h2>
+          <div class="energy" id="energy" aria-label="Energy"></div>
+        </div>
+        <div class="hp-bar">
+          <div class="hp-fill" id="player-hp-fill"></div>
+          <span class="hp-text" id="player-hp-text"></span>
+        </div>
+        <div class="timer-bar energy-regen"><div class="timer-fill" id="energy-timer"></div></div>
+        <div class="statuses" id="player-statuses"></div>
+      </section>
+
+      <section class="hand-area">
+        <div class="hand-info">
+          <span>Next play <b id="play-countdown"></b></span>
+          <span class="draw-info">
+            Draw <span class="mini-bar"><span class="mini-fill" id="draw-timer"></span></span>
+            <span id="pile-count"></span>
+          </span>
+        </div>
+        <div class="hand" id="hand"></div>
+      </section>
+
+      <div class="overlay" id="overlay">
+        <div class="overlay-card">
+          <h1 id="overlay-title"></h1>
+          <div id="overlay-body"></div>
+          <button class="primary-btn" id="overlay-btn"></button>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

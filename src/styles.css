@@ -1,0 +1,769 @@
+/* 1-bit-ish palette: black, white, two greys, and a single red reserved for danger. */
+:root {
+  --black: #000;
+  --panel: #080808;
+  --white: #f2f2f2;
+  --grey: #8c8c8c;
+  --dim: #3a3a3a;
+  --danger: #ff3b3b;
+  --px: 3px;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-text: 'VT323', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-text);
+  font-size: 20px;
+  line-height: 1;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: none;
+}
+
+/* CRT scanlines */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, transparent 0 2px, #0000004d 2px 3px);
+}
+
+#app {
+  position: relative;
+  height: 100dvh;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.px-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.35em;
+  vertical-align: -0.12em;
+  flex: none;
+}
+
+/* Pixel frame: a border drawn with box-shadows, leaving the corners notched. */
+.frame,
+.fighter,
+.duel-side,
+.overlay-card,
+.primary-btn,
+.icon-btn {
+  --frame: var(--dim);
+  margin: var(--px);
+  border: none;
+  box-shadow:
+    0 calc(var(--px) * -1) 0 0 var(--frame),
+    0 var(--px) 0 0 var(--frame),
+    calc(var(--px) * -1) 0 0 0 var(--frame),
+    var(--px) 0 0 0 var(--frame);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--grey);
+}
+
+.icon-btn {
+  --frame: var(--grey);
+  width: 34px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  background: var(--black);
+  font-size: 14px;
+}
+
+.icon-btn .px-icon {
+  margin: 0;
+}
+
+/* Fighters */
+
+.fighter {
+  position: relative;
+  background: var(--panel);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.enemy-top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.sprite {
+  width: 64px;
+  height: 64px;
+  flex: none;
+}
+
+.sprite .px-icon {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.enemy-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fighter-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 18px;
+}
+
+.fighter-head h2 {
+  flex: 1;
+  margin: 0;
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hp-bar {
+  position: relative;
+  height: 18px;
+  padding: 2px;
+  border: 2px solid var(--grey);
+  background: var(--black);
+}
+
+.hp-fill {
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--white) 0 6px, transparent 6px 8px);
+  transition: width 0.2s steps(4);
+}
+
+.hp-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--black);
+  text-shadow:
+    1px 0 var(--white),
+    -1px 0 var(--white),
+    0 1px var(--white),
+    0 -1px var(--white);
+}
+
+.block-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 6px;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font-pixel);
+  font-size: 9px;
+}
+
+.block-badge small {
+  margin-left: 6px;
+  font-size: 7px;
+}
+
+.statuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 18px;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 5px;
+  border: 2px solid var(--grey);
+  font-size: 17px;
+  color: var(--white);
+}
+
+.timer-bar {
+  height: 6px;
+  background: var(--dim);
+  overflow: hidden;
+}
+
+.timer-fill {
+  height: 100%;
+  background: var(--white);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.energy {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+}
+
+.energy .px-icon {
+  margin-right: 2px;
+}
+
+.pip {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--white);
+}
+
+.pip.full {
+  background: var(--white);
+}
+
+.energy-regen {
+  height: 3px;
+}
+
+/* Center duel: the enemy's next action (red) facing the player's block (white) */
+
+.force-zone {
+  position: relative;
+  flex: 1;
+  min-height: 150px;
+  border: 2px dashed transparent;
+  display: grid;
+  place-items: center;
+}
+
+.duel {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  padding: 6px;
+}
+
+.duel-side {
+  --frame: var(--dim);
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: var(--black);
+  text-align: center;
+  min-width: 0;
+}
+
+.duel-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: var(--font-pixel);
+  font-size: 40px;
+  line-height: 1;
+}
+
+.duel-icon .px-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.duel-label {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.duel-side > .duel-label:first-child {
+  color: var(--grey);
+  font-size: 8px;
+}
+
+.duel-side .timer-bar {
+  width: 100%;
+  height: 8px;
+}
+
+.duel-sub {
+  font-size: 18px;
+  color: var(--grey);
+  min-height: 18px;
+}
+
+.duel-sub .px-icon {
+  margin-right: 0.25em;
+}
+
+.duel-outcome {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  min-height: 9px;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.intent {
+  --frame: var(--danger);
+  color: var(--danger);
+}
+
+.intent .timer-fill {
+  background: var(--danger);
+}
+
+.intent[data-kind='heavy'] {
+  animation: blink-frame 0.5s steps(1) infinite;
+  background: repeating-linear-gradient(45deg, transparent 0 6px, #ff3b3b1f 6px 8px), var(--black);
+}
+
+@keyframes blink-frame {
+  50% {
+    --frame: var(--white);
+  }
+}
+
+.guard {
+  --frame: var(--white);
+  color: var(--white);
+}
+
+.guard.empty {
+  --frame: var(--dim);
+  color: var(--dim);
+}
+
+.duel-side.flash {
+  animation: flash 0.3s steps(2);
+}
+
+@keyframes flash {
+  from {
+    background: var(--white);
+  }
+}
+
+/* Force-play drop zone: the same center area, highlighted while a card is dragged */
+
+.force-zone-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--grey);
+  pointer-events: none;
+}
+
+.force-zone.active {
+  border-color: var(--dim);
+}
+
+.force-zone.over {
+  border-color: var(--white);
+  border-style: solid;
+  background: repeating-linear-gradient(45deg, transparent 0 6px, #ffffff14 6px 8px);
+}
+
+.force-zone.over .force-zone-text {
+  color: var(--white);
+}
+
+.force-zone.over .duel {
+  opacity: 0.35;
+}
+
+.force-zone.over.no-energy {
+  border-color: var(--danger);
+}
+
+.force-zone.over.no-energy .force-zone-text {
+  color: var(--danger);
+}
+
+/* Hand */
+
+.hand-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 17px;
+  color: var(--grey);
+}
+
+.hand-info b {
+  font-weight: normal;
+  color: var(--white);
+}
+
+.draw-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mini-bar {
+  display: inline-block;
+  width: 48px;
+  height: 6px;
+  background: var(--dim);
+  overflow: hidden;
+}
+
+.mini-fill {
+  display: block;
+  height: 100%;
+  background: var(--white);
+  transform-origin: left;
+}
+
+.mini-fill.waiting {
+  background: var(--grey);
+}
+
+.hand {
+  position: relative;
+  height: 150px;
+  touch-action: none;
+}
+
+.card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  padding: 7px;
+  border: 3px solid var(--white);
+  background: var(--black);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  transition:
+    transform 0.2s steps(5),
+    width 0.2s steps(5),
+    opacity 0.3s steps(3);
+}
+
+/* Card types read by border pattern + icon, not by colour. */
+.card.type-defense {
+  border-style: double;
+  border-width: 5px;
+  padding: 5px;
+}
+.card.type-draw {
+  border-style: dashed;
+}
+.card.type-tempo {
+  border-style: dotted;
+}
+
+.card.next {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+
+.card.held {
+  background: var(--white);
+  color: var(--black);
+}
+
+.card.held .card-text {
+  color: var(--black);
+}
+
+.card.dragging {
+  z-index: 10;
+  cursor: grabbing;
+  transition: none;
+  box-shadow: 6px 6px 0 var(--dim);
+}
+
+.card.leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.card-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-icon {
+  font-size: 18px;
+}
+
+.card-name {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.card-text {
+  font-size: 17px;
+  line-height: 0.95;
+  color: #cfcfcf;
+}
+
+.card-timer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 6px;
+  background: repeating-linear-gradient(90deg, var(--white) 0 4px, transparent 4px 6px);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.card.held .card-timer {
+  background: repeating-linear-gradient(90deg, var(--black) 0 4px, transparent 4px 6px);
+}
+
+/* Feedback */
+
+.floater {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow:
+    2px 2px 0 var(--black),
+    -2px -2px 0 var(--black);
+  animation: float 0.9s steps(6) forwards;
+}
+
+.floater small {
+  margin-left: 6px;
+  font-size: 9px;
+  color: var(--grey);
+}
+
+.floater.damage {
+  color: var(--danger);
+}
+
+.floater.play {
+  top: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+@keyframes float {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  70% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -36px);
+  }
+}
+
+.shake {
+  animation: shake 0.3s steps(1);
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(-4px, 0);
+  }
+  25% {
+    transform: translate(4px, -2px);
+  }
+  50% {
+    transform: translate(-2px, 2px);
+  }
+  75% {
+    transform: translate(2px, 0);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* Overlay */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  padding: 16px;
+  display: grid;
+  place-items: center;
+  background: #000000d9;
+}
+
+.overlay-card {
+  --frame: var(--white);
+  max-width: 440px;
+  padding: 22px 20px 20px;
+  background: var(--black);
+}
+
+.overlay-card h1 {
+  margin: 0 0 16px;
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.overlay-card p {
+  margin: 0 0 12px;
+  line-height: 1.1;
+}
+
+.rules {
+  margin: 0 0 14px;
+  padding-left: 18px;
+  line-height: 1.05;
+  list-style: square;
+}
+
+.rules li {
+  margin-bottom: 8px;
+}
+
+.rules b {
+  font-weight: normal;
+  color: var(--black);
+  background: var(--white);
+  padding: 0 3px;
+}
+
+.primary-btn {
+  --frame: var(--white);
+  width: calc(100% - var(--px) * 2);
+  padding: 14px;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  text-transform: uppercase;
+  animation: blink 1.2s steps(1) infinite;
+}
+
+.primary-btn:hover,
+.primary-btn:focus-visible {
+  background: var(--black);
+  color: var(--white);
+  outline: none;
+}
+
+@keyframes blink {
+  50% {
+    --frame: var(--grey);
+  }
+}
+
+@media (max-width: 480px) {
+  html,
+  body {
+    font-size: 18px;
+  }
+  .hand {
+    height: 136px;
+  }
+  .card {
+    padding: 5px;
+    gap: 6px;
+  }
+  .card.type-defense {
+    padding: 3px;
+  }
+  .card-name {
+    font-size: 7px;
+  }
+  .card-text {
+    font-size: 15px;
+  }
+  .sprite {
+    width: 48px;
+    height: 48px;
+  }
+  .duel {
+    gap: 12px;
+    padding: 4px;
+  }
+  .duel-main {
+    font-size: 28px;
+    gap: 8px;
+  }
+  .duel-icon .px-icon {
+    width: 40px;
+    height: 40px;
+  }
+  .duel-label {
+    font-size: 8px;
+  }
+  .duel-outcome {
+    font-size: 7px;
+    min-height: 7px;
+  }
+  .duel-sub {
+    font-size: 16px;
+  }
+}
