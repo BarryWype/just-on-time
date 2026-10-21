@@ -1,10 +1,28 @@
-# Just On Time — combat POC
+# Just On Time
+
+**▶ Play it in your browser: https://barrywype.github.io/just-on-time/**
+
+Works on desktop and mobile. No install, no account.
 
 A real-time card combat prototype. The leftmost card of your hand plays itself on a timer; you win by reordering the hand, holding cards back at the last moment, and spending energy to jump the queue.
 
-The goal is to answer one question: **is the timing + live reordering mechanic readable and fun?** No meta-game, one fight.
+This is a proof of concept with one goal: **is the timing + live reordering mechanic readable and fun?** One fight, no meta-game. Feedback welcome — open an issue.
 
-## Run
+## How to play
+
+- Your **leftmost** card plays automatically every few seconds, and a new card is drawn on the right.
+- In the middle of the screen, the **red** icon is what the enemy will do next (with a countdown); the **white** shield is your current block.
+- Reorder your hand so the right card plays at the right time — block before big hits, attack while the enemy defends.
+- Beat the Iron Golem before it beats you.
+
+| Action | Mouse / touch |
+| --- | --- |
+| Reorder | Drag a card left/right in the hand |
+| Save a card from being played | Press and hold it — the next card is played instead |
+| Play a card now (costs 1 energy) | Drag it up into the middle of the screen and release, or double-tap it |
+| Pause | Pause button, or <kbd>Space</kbd> (also auto-pauses when the tab is hidden) |
+
+## Run locally
 
 ```bash
 npm install
@@ -12,15 +30,6 @@ npm run dev        # local dev server
 npm test           # engine unit tests
 npm run build      # typecheck + production build into dist/
 ```
-
-## Controls
-
-| Action | Mouse / touch |
-| --- | --- |
-| Reorder | Drag a card left/right in the hand |
-| Save a card from being played | Press and hold it — the next card is played instead |
-| Play a card now (costs energy) | Drag it up out of the hand and release, or double-tap it |
-| Pause | ⏸ button, or <kbd>Space</kbd> (also auto-pauses when the tab is hidden) |
 
 ## Project structure
 
@@ -101,5 +110,7 @@ Enemy (Iron Golem, 90 HP) loops: Attack 5 → Attack 5 → Block 10 → Heavy 14
 
 ## Deploy (GitHub Pages)
 
-`.github/workflows/deploy.yml` builds and publishes `dist/` on every push to `main`.
+The game is published at https://barrywype.github.io/just-on-time/.
+
+`.github/workflows/deploy.yml` runs the tests, builds and publishes `dist/` on every push to `main` (or manually from the Actions tab).
 One-time setup: in the repo, **Settings → Pages → Source: GitHub Actions**. `vite.config.ts` uses a relative `base`, so it works under `/<repo>/` without changes.
